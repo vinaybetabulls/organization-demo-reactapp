@@ -1,0 +1,43 @@
+Registration: 
+
+    First Name
+    Last Name
+    email
+    password
+
+Login
+    email
+    password
+
+organization
+    Name
+    id - USE UUID
+    location
+    organization images limit 4
+    org-ceo
+
+company
+    id
+    Name
+    organization-name (id)
+    location
+
+desigantion
+    
+    id
+    name
+
+
+department
+    id
+    name
+
+employee
+
+    empid - uuid -(backend)
+    employename
+    employee email
+    desigantion
+    department
+    company
+
