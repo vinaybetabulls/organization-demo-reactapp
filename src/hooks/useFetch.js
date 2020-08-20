@@ -5,6 +5,7 @@ const useFetch = ({ url, method, token, input }) => {
   const [response, setResponse] = useState([]);
   const [appData, setAppData] = useState({});
   const [error, setError] = useState(null);
+  const [isAuth, setIsAuth] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (event) => {
@@ -37,6 +38,7 @@ const useFetch = ({ url, method, token, input }) => {
       const res = await fetch(fetchUrl, config);
       const json = await res.json();
       console.log(json);
+      if(json.status == 401) setIsAuth(false) 
       if(json && json.jwt) localStorage.setItem('authToken', json.jwt)
       setResponse(json);
       setIsLoading(false);
@@ -52,7 +54,7 @@ const useFetch = ({ url, method, token, input }) => {
   //   console.log(response)
   // }, [input]);
 
-  return { response, error, isLoading, handleChange, handleSubmit, fetchData };
+  return { response, isAuth, error, isLoading, handleChange, handleSubmit, fetchData };
 }
 
 export default useFetch 

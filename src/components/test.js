@@ -9,8 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import { Typography, Divider } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import PageviewIcon from '@material-ui/icons/Pageview';
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: "#3D4A77",
@@ -47,30 +46,29 @@ const columns = [
     align: 'right',
     format: (value) => value.toFixed(2),
   },
-  { id: 'actions', label: 'Actions', minWidth: 170, align: 'center' },
 ];
 
-function createData(name, code, population, size, actions) {
+function createData(name, code, population, size) {
   const density = population / size;
-  return { name, code, population, size, density, actions };
+  return { name, code, population, size, density };
 }
 
 const rows = [
-  createData('India', 'IN', 1324171354, 3287263, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('China', 'CN', 1403500365, 9596961 , <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Italy', 'IT', 60483973, 301340 , <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('United States', 'US', 327167434, 9833520, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Canada', 'CA', 37602103, 9984670, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Australia', 'AU', 25475400, 7692024, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Germany', 'DE', 83019200, 357578, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Ireland', 'IE', 4857000, 70273, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Mexico', 'MX', 126577691, 1972550, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Japan', 'JP', 126317000, 377973, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('France', 'FR', 67022000, 640679, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('United Kingdom', 'GB', 67545757, 242495, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Russia', 'RU', 146793744, 17098246, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Nigeria', 'NG', 200962417, 923768, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Brazil', 'BR', 210147125, 8515767, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
+  createData('India', 'IN', 1324171354, 3287263),
+  createData('China', 'CN', 1403500365, 9596961),
+  createData('Italy', 'IT', 60483973, 301340),
+  createData('United States', 'US', 327167434, 9833520),
+  createData('Canada', 'CA', 37602103, 9984670),
+  createData('Australia', 'AU', 25475400, 7692024),
+  createData('Germany', 'DE', 83019200, 357578),
+  createData('Ireland', 'IE', 4857000, 70273),
+  createData('Mexico', 'MX', 126577691, 1972550),
+  createData('Japan', 'JP', 126317000, 377973),
+  createData('France', 'FR', 67022000, 640679),
+  createData('United Kingdom', 'GB', 67545757, 242495),
+  createData('Russia', 'RU', 146793744, 17098246),
+  createData('Nigeria', 'NG', 200962417, 923768),
+  createData('Brazil', 'BR', 210147125, 8515767),
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -81,11 +79,11 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 440,
   },
   title: {
-    padding: '16px 16px 4px 16px',
+    padding: theme.spacing(2),
   },
 }));
 
-const CompaniesList = () => {
+export default function StickyHeadTable() {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -101,7 +99,7 @@ const CompaniesList = () => {
 
   return (
     <Paper className={classes.root}>
-      <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Companies List</Typography>
+      <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Recent Orders</Typography>
       <Divider variant="middle" />
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
@@ -148,5 +146,3 @@ const CompaniesList = () => {
     </Paper>
   );
 }
-
-export default CompaniesList;

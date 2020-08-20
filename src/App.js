@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Routes from './routes/Routes';
-import Header from './components/header';
+import MenuBar from './components/MenuBar';
 import Footer from './components/footer';
 import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,11 +19,12 @@ function App() {
   const classes = useStyles();
   return (
     <>
-      <Header />
+      <MenuBar />
       <Container className={classes.paper}>
         <Routes />
       </Container>
       <Footer />
+      {/* <Routes /> */}
     </>
   );
 }

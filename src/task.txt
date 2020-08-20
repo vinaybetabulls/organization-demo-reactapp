@@ -1,3 +1,17 @@
+Pending Tasks:
+1 - functionalities for Comapnies & Employees
+2 - View & Delete Organisation
+3 - Upload Pictures for Organisation
+4 - profile
+
+Design:
+1 - view pages
+2 - add pages
+3 - profile page
+4 - add button for Org, cmp, emp
+
+=======================================================================================================
+
 Registration: 
 
     First Name

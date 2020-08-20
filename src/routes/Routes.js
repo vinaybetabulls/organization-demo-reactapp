@@ -8,6 +8,8 @@ import DesignationsList from '../components/Designation/DesignationsList';
 import EmployeesList from '../components/Employee/EmployeesList';
 import OrganisationsList from '../components/Organisation/OrganisationsList';
 import AddOrganisation from '../components/Organisation/AddOrganisation';
+import Test from '../components/test';
+import MenuBar from '../components/MenuBar';
 
 const Routes = () => (
   <Switch>
@@ -19,6 +21,8 @@ const Routes = () => (
     <Route path="/department" component={DepartmentsList} />
     <Route path="/designation" component={DesignationsList} />
     <Route path="/addorg" component={AddOrganisation} />
+    <Route path="/test" component={Test}/>
+    
   </Switch>
 );
 
