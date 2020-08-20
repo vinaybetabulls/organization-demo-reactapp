@@ -9,7 +9,6 @@ import EmployeesList from '../components/Employee/EmployeesList';
 import OrganisationsList from '../components/Organisation/OrganisationsList';
 import AddOrganisation from '../components/Organisation/AddOrganisation';
 import Test from '../components/test';
-import MenuBar from '../components/MenuBar';
 
 const Routes = () => (
   <Switch>

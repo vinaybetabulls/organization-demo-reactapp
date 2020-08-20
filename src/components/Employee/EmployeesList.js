@@ -8,7 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import { Typography, Divider } from '@material-ui/core';
+import { Typography, Divider, Grid, Button } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PageviewIcon from '@material-ui/icons/Pageview';
 const StyledTableCell = withStyles((theme) => ({
@@ -101,8 +101,14 @@ const EmployeesList = () => {
 
   return (
     <Paper className={classes.root}>
-      <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Employees List</Typography>
-      <Divider variant="middle" />
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Companies List</Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Button variant="contained" color="primary" style={{ float: 'right', margin: '14px', backgroundColor:'#3D4A77' }}>Add Company</Button>
+        </Grid>
+      </Grid>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

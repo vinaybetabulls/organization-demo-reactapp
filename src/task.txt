@@ -3,6 +3,7 @@ Pending Tasks:
 2 - View & Delete Organisation
 3 - Upload Pictures for Organisation
 4 - profile
+5 - registration functionality
 
 Design:
 1 - view pages

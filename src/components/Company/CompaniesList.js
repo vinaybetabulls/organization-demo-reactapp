@@ -8,7 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import { Typography, Divider } from '@material-ui/core';
+import { Typography, Divider, Button, Grid } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PageviewIcon from '@material-ui/icons/Pageview';
 const StyledTableCell = withStyles((theme) => ({
@@ -56,21 +56,21 @@ function createData(name, code, population, size, actions) {
 }
 
 const rows = [
-  createData('India', 'IN', 1324171354, 3287263, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('China', 'CN', 1403500365, 9596961 , <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Italy', 'IT', 60483973, 301340 , <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('United States', 'US', 327167434, 9833520, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Canada', 'CA', 37602103, 9984670, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Australia', 'AU', 25475400, 7692024, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Germany', 'DE', 83019200, 357578, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Ireland', 'IE', 4857000, 70273, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Mexico', 'MX', 126577691, 1972550, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Japan', 'JP', 126317000, 377973, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('France', 'FR', 67022000, 640679, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('United Kingdom', 'GB', 67545757, 242495, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Russia', 'RU', 146793744, 17098246, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Nigeria', 'NG', 200962417, 923768, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
-  createData('Brazil', 'BR', 210147125, 8515767, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary"/></>),
+  createData('India', 'IN', 1324171354, 3287263, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('China', 'CN', 1403500365, 9596961, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('Italy', 'IT', 60483973, 301340, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('United States', 'US', 327167434, 9833520, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('Canada', 'CA', 37602103, 9984670, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('Australia', 'AU', 25475400, 7692024, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('Germany', 'DE', 83019200, 357578, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('Ireland', 'IE', 4857000, 70273, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('Mexico', 'MX', 126577691, 1972550, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('Japan', 'JP', 126317000, 377973, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('France', 'FR', 67022000, 640679, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('United Kingdom', 'GB', 67545757, 242495, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('Russia', 'RU', 146793744, 17098246, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('Nigeria', 'NG', 200962417, 923768, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
+  createData('Brazil', 'BR', 210147125, 8515767, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -101,8 +101,15 @@ const CompaniesList = () => {
 
   return (
     <Paper className={classes.root}>
-      <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Companies List</Typography>
-      <Divider variant="middle" />
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Companies List</Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Button variant="contained" color="primary" style={{ float: 'right', margin: '14px', backgroundColor:'#3D4A77' }}>Add Company</Button>
+        </Grid>
+      </Grid>
+
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
