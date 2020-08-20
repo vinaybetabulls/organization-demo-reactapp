@@ -40,6 +40,7 @@ const useFetch = ({ url, method, token, input }) => {
       if(json && json.jwt) localStorage.setItem('authToken', json.jwt)
       setResponse(json);
       setIsLoading(false);
+      return json;
     } catch (error) {
       console.log(error);
       setError(error)
