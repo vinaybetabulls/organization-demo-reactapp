@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Paper } from '@material-ui/core';
+import useFetch from '../../hooks/useFetch';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,8 +43,17 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
   const classes = useStyles();
 
+  const {response: registration, error, isLoading, handleChange, handleSubmit} = useFetch({
+    url: `user/registration`,
+    method: `POST`
+  })
+
   return (
     <Container component="main" maxWidth="xs">
+      {registration && (<Alert severity="success">
+        <AlertTitle>Success</AlertTitle>
+        Registration successfull!
+      </Alert>)}
       <CssBaseline />
       <Paper className={classes.wrapper}>
         <div className={classes.paper}>
@@ -52,7 +63,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
         </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} onSubmit={handleSubmit} noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -64,6 +75,7 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -75,6 +87,7 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="lname"
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -86,6 +99,7 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -98,6 +112,7 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -118,7 +133,7 @@ export default function SignUp() {
           </Button>
             <Grid container justify="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/" variant="body2">
                   Already have an account? Sign in
               </Link>
               </Grid>

@@ -1,95 +1,146 @@
-import React, { useReducer, useEffect } from 'react'
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { Paper, TableRow, CircularProgress, TableHead, TableContainer, TableCell, TableBody, Table } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
-import { green } from '@material-ui/core/colors';
-import { Redirect } from 'react-router';
+import React, { useEffect } from 'react';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import { Typography, Grid, Button } from '@material-ui/core';
+import PageviewIcon from '@material-ui/icons/Pageview';
+import { Link } from 'react-router-dom';
+
 import useFetch from '../../hooks/useFetch';
-import { reducer, initialState } from '../../reducers/OrganisationReducer';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: "#3D4A77",
     color: theme.palette.common.white,
+    fontSize: 16,
+    fontWeight: 800
   },
   body: {
-    fontSize: 14,
+    fontSize: 16,
   },
 }))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
-  },
-}))(TableRow);
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
+const columns = [
+  { id: 'orgId', label: 'Organization Id', minWidth: 120 },
+  { id: 'orgName', label: 'Organization Name', minWidth: 120 },
+  { id: 'orgCEO', label: 'Organization CEO', minWidth: 120 },
+  { id: 'orgLocation', label: 'Organization Location', minWidth: 120 },
+  { id: 'actions', label: 'Actions', minWidth: 100, align: 'center' },
 ];
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 700,
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
   },
-  buttonProgress: {
-    color: green[500],
-    top: '45%',
-    left: '50%',
-    position: 'absolute'
+  container: {
+    maxHeight: 440,
   },
-});
+  title: {
+    padding: '16px 16px 4px 16px',
+  },
+}));
 
 const OrganisationsList = () => {
   const classes = useStyles();
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const tableHeaders = ['OrgId', 'Name', 'CEO Name', 'Location'];
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rows, setRows] = React.useState([]);
+
+  
   const url = `organization/getAllOrganizationsList`;
   const token = localStorage.getItem('authToken');
   const method = "GET";
   const { response: organisations, isAuth, error, isLoading, fetchData } = useFetch({ url, token, method })
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   useEffect(() => {
-    fetchData();
+    const getOrganizationList = async () => {
+      let organizationList = await fetchData();
+
+      if (organizationList.length > 0) {
+        organizationList = organizationList.map(organization => {
+          return {
+            orgId: organization.orgId,
+            orgName: organization.orgName,
+            orgCEO: organization.orgCEO,
+            orgLocation: organization.orgLocation,
+            actions: <><PageviewIcon color="primary" /> </>
+          }
+        });
+        setRows(organizationList);
+      }
+    }
+    getOrganizationList();
     //dispatch({ type: "API_CALL_SUCCESS", payload: { organisations } })
   }, []);
 
   return (
-    // (!isAuth) ? <Redirect to="/"/>:
-      <div>
-        <h3>Organisations List</h3>
-        {(error) && <Alert severity="error">{error}</Alert>}
-        {JSON.stringify(isAuth)}
-        <TableContainer component={Paper}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>{tableHeaders.map((header, i) => <StyledTableCell key={i}>{header}</StyledTableCell>)}</TableRow>
-            </TableHead>
-            {(isLoading) && <CircularProgress size={50} className={classes.buttonProgress} />}
-            <TableBody>
-              {
-              organisations && organisations.map((org, i) => {
-                return <StyledTableRow key={i}>
-                    <StyledTableCell>{org.orgId}</StyledTableCell>
-                    <StyledTableCell>{org.orgName}</StyledTableCell>
-                    <StyledTableCell>{org.orgCEO}</StyledTableCell>
-                    <StyledTableCell>{org.orgLocation}</StyledTableCell>
-                  </StyledTableRow>
-                })
-              }
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+    <Paper className={classes.root}>
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Organization List</Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Button variant="contained" component={Link} to='/addOrg' color="primary" style={{ float: 'right', margin: '14px', backgroundColor: '#3D4A77' }}>Add Organization</Button>
+        </Grid>
+      </Grid>
+      <TableContainer className={classes.container}>
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <StyledTableCell
+                  key={column.id}
+                  align={column.align}
+                  style={{ minWidth: column.minWidth }}
+                >
+                  {column.label}
+                </StyledTableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+              return (
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  {columns.map((column) => {
+                    const value = row[column.id];
+                    return (
+                      <TableCell key={column.id} align={column.align}>
+                        {column.format && typeof value === 'number' ? column.format(value) : value}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 100]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    </Paper>
   )
 }
 

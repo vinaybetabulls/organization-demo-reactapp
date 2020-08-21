@@ -10,18 +10,19 @@ import AddEmployee from '../components/Employee/AddEmployee';
 import OrganisationsList from '../components/Organisation/OrganisationsList';
 import AddOrganisation from '../components/Organisation/AddOrganisation';
 import Test from '../components/test';
+import ProtectRoute from './ProtectRote';
 
 const Routes = () => (
   <Switch>
     <Route path="/register" component={Registration} />
     <Route exact path="/" component={Login} />
-    <Route path="/organisation" component={OrganisationsList} />
-    <Route path="/companies" component={CompaniesList} />
-    <Route path="/employees" component={EmployeesList} />
-    <Route path="/addEmployee" component={AddEmployee} />
-    <Route path="/department" component={DepartmentsList} />
-    <Route path="/designation" component={DesignationsList} />
-    <Route path="/addorg" component={AddOrganisation} />
+    <ProtectRoute exact path='/organisation' component={OrganisationsList} />
+    <ProtectRoute exact path='/companies' component={CompaniesList} />
+    <ProtectRoute exact path='/employees' component={EmployeesList} />
+    <ProtectRoute exact path='/addEmployee' component={AddEmployee} />
+    <ProtectRoute exact path='/department' component={DepartmentsList} />
+    <ProtectRoute exact path='/designation' component={DesignationsList} />
+    <ProtectRoute exact path='/addorg' component={AddOrganisation} />
     <Route path="/test" component={Test}/>
     
   </Switch>

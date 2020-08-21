@@ -16,6 +16,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import { NavLink } from "react-router-dom";
 import jwt from 'jsonwebtoken';
 import Avatar from '@material-ui/core/Avatar';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -57,17 +58,18 @@ export default function MenuBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [auth, setAuth] = React.useState(true);
+  const history = useHistory();
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const token = localStorage.getItem('authToken');
-  var decodedToken=jwt.decode(token, {complete: true});
+  var decodedToken = jwt.decode(token, { complete: true });
   var dateNow = new Date();
 
   useEffect(() => {
     if (decodedToken === null || decodedToken.exp < dateNow.getTime()) setAuth(false);
-  })
+  },[])
 
 
   const handleProfileMenuOpen = (event) => {
@@ -87,6 +89,11 @@ export default function MenuBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleLogut = () => {
+    localStorage.removeItem("authToken");
+    history.push("/");
+  }
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -100,7 +107,7 @@ export default function MenuBar() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem onClick={handleLogut}>Logout</MenuItem>
     </Menu>
   );
 
@@ -122,7 +129,7 @@ export default function MenuBar() {
           aria-haspopup="true"
           color="inherit"
         >
-          <Avatar alt="Remy Sharp" src="/broken-image.jpg"  />
+          <Avatar alt="Remy Sharp" src="/broken-image.jpg" />
         </IconButton>
         <p>Profile</p>
       </MenuItem>

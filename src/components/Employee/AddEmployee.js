@@ -3,8 +3,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -44,6 +44,13 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       width: '25ch',
     },
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -236,46 +243,55 @@ const AddEmployee = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
-                <Select
-                  labelId="standard-select-designation"
-                  id="standard-select-designation"
-                  onChange={handleChange}
-                  name="designation"
-                >
-                  {designationsList.length > 0 && designationsList.map((option) => (
-                    <MenuItem key={option.id} value={option.designationName}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <FormControl required className={classes.formControl}>
+                <InputLabel id="demo-simple-select-helper-label">Designation</InputLabel>
+                  <Select
+                    labelId="standard-select-designation"
+                    id="standard-select-designation"
+                    onChange={handleChange}
+                    name="designation"
+                  >
+                    {designationsList.length > 0 && designationsList.map((option) => (
+                      <MenuItem key={option.id} value={option.designationName}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={12}>
-                <Select
-                  labelId="standard-select-department"
-                  id="standard-select-department"
-                  onChange={handleChange}
-                  name="department"
-                >
-                  {departmentList.length > 0 && departmentList.map((option) => (
-                    <MenuItem key={option.id} value={option.departmentName}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <FormControl required className={classes.formControl}>
+                <InputLabel id="demo-simple-select-helper-label">Department</InputLabel>
+                  <Select
+                    labelId="standard-select-department"
+                    id="standard-select-department"
+                    onChange={handleChange}
+                    name="department"
+                  >
+                    {departmentList.length > 0 && departmentList.map((option) => (
+                      <MenuItem key={option.id} value={option.departmentName} >
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={12}>
-                <Select
-                  labelId="standard-select-company"
-                  id="standard-select-company"
-                  onChange={handleChange}
-                  name="company"
-                >
-                  {companiesList.length > 0 && companiesList.map((option) => (
-                    <MenuItem key={option.id} value={option.companyName}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <FormControl required className={classes.formControl}>
+                <InputLabel id="demo-simple-select-helper-label">Company</InputLabel>
+                  <Select
+                    labelId="standard-select-company"
+                    id="standard-select-company"
+                    onChange={handleChange}
+                    name="company"
+                  >
+                    {companiesList.length > 0 && companiesList.map((option) => (
+                      <MenuItem key={option.id} value={option.companyName}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
             <Button
