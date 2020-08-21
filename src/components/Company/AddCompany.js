@@ -7,7 +7,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import uuid from 'react-uuid';
-import axios from 'axios'
+import axios from 'axios';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +34,7 @@ const AddCompany = () => {
   let cmpUUID = uuid();
   const [orgs, setOrgs] = useState([])
   const [addOrgData, setOrgData] = useState({});
-
+  const [companyAddResponse, setCompanyAddResponse] = React.useState(false);
 
   useEffect(() => {
     const getAllOrgs = async () => {
@@ -60,15 +61,23 @@ const AddCompany = () => {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('addOrgdata..', addOrgData);
-
+    const orgResponse = await axios.post(`https://organization-demo.herokuapp.com/company/createCompany`, addOrgData, {
+      headers: {
+        token: localStorage.getItem('authToken')
+      }
+    });
+    setCompanyAddResponse(orgResponse);
   }
 
   return (
     <Paper className={classes.root}>
-
+      {companyAddResponse && (<Alert severity="success">
+        <AlertTitle>Success</AlertTitle>
+        Employee created successfully!
+      </Alert>)}
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Add Company</Typography>
