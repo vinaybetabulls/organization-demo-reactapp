@@ -70,7 +70,7 @@ const AddOrganisation = () => {
               name="orgId"
               label="ID"
               fullWidth
-              autoComplete="given-name" value={orgUUID} disabled
+              autoComplete="given-name" variant="filled" value={orgUUID} disabled
             />
           </Grid>
           <Grid item xs={12} sm={6}>

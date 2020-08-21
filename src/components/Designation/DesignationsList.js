@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import MaterialTable from 'material-table';
+import { Alert } from '@material-ui/lab';
+
+import axios from 'axios';
 
 import useFetch from '../../hooks/useFetch';
-import axios from 'axios';
 // import { reducer, initialState } from '../../reducers/DesignationReducer';
 
 export default function DesignationsList() {
@@ -19,7 +21,7 @@ export default function DesignationsList() {
   const url = `designation/getAllDesignationsList`;
   const token = localStorage.getItem('authToken');
   const method = "GET";
-  const { fetchData } = useFetch({ url, token, method })
+  const { fetchData, error } = useFetch({ url, token, method })
 
   useEffect(() => {
     const getDesignation = async () => {
@@ -94,7 +96,9 @@ export default function DesignationsList() {
   }
 
   return (
+    
     <div style={{ minWidth: '100%' }}>
+      {(error) && <Alert severity="error">{error}</Alert>}
       <MaterialTable
         columns={state.columns}
         data={Array.from(state.data)}

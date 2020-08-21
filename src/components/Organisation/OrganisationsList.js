@@ -3,7 +3,7 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { Paper, TableRow, CircularProgress, TableHead, TableContainer, TableCell, TableBody, Table } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { green } from '@material-ui/core/colors';
-
+import { Redirect } from 'react-router';
 import useFetch from '../../hooks/useFetch';
 import { reducer, initialState } from '../../reducers/OrganisationReducer';
 
@@ -56,39 +56,40 @@ const OrganisationsList = () => {
   const url = `organization/getAllOrganizationsList`;
   const token = localStorage.getItem('authToken');
   const method = "GET";
-  const { response: organisations, error, isLoading, fetchData } = useFetch({ url, token, method })
+  const { response: organisations, isAuth, error, isLoading, fetchData } = useFetch({ url, token, method })
 
   useEffect(() => {
     fetchData();
-    dispatch({ type: "API_CALL_SUCCESS", payload: { organisations } })
+    //dispatch({ type: "API_CALL_SUCCESS", payload: { organisations } })
   }, []);
 
   return (
-    <>
-      <h3>Organisations List</h3>
-      {(error) && <Alert severity="error">{error}</Alert>}
-      
-      <TableContainer component={Paper}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>{tableHeaders.map((header, i) => <StyledTableCell key={i}>{header}</StyledTableCell>)}</TableRow>
-          </TableHead>
-          {(isLoading) && <CircularProgress size={50} className={classes.buttonProgress} />}
-          <TableBody>
-            {
+    // (!isAuth) ? <Redirect to="/"/>:
+      <div>
+        <h3>Organisations List</h3>
+        {(error) && <Alert severity="error">{error}</Alert>}
+        {JSON.stringify(isAuth)}
+        <TableContainer component={Paper}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>{tableHeaders.map((header, i) => <StyledTableCell key={i}>{header}</StyledTableCell>)}</TableRow>
+            </TableHead>
+            {(isLoading) && <CircularProgress size={50} className={classes.buttonProgress} />}
+            <TableBody>
+              {
               organisations && organisations.map((org, i) => {
                 return <StyledTableRow key={i}>
-                  <StyledTableCell>{org.orgId}</StyledTableCell>
-                  <StyledTableCell>{org.orgName}</StyledTableCell>
-                  <StyledTableCell>{org.orgCEO}</StyledTableCell>
-                  <StyledTableCell>{org.orgLocation}</StyledTableCell>
-                </StyledTableRow>
-              })
-            }
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
+                    <StyledTableCell>{org.orgId}</StyledTableCell>
+                    <StyledTableCell>{org.orgName}</StyledTableCell>
+                    <StyledTableCell>{org.orgCEO}</StyledTableCell>
+                    <StyledTableCell>{org.orgLocation}</StyledTableCell>
+                  </StyledTableRow>
+                })
+              }
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
   )
 }
 
