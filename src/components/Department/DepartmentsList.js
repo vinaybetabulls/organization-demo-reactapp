@@ -90,6 +90,7 @@ const DepartmentsList = () => {
   return (
     <div style={{ minWidth: '100%' }}>
       <MaterialTable
+        title='Department List'
         columns={state.columns}
         data={Array.from(state.data)}
         editable={{

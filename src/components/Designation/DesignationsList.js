@@ -96,10 +96,11 @@ export default function DesignationsList() {
   }
 
   return (
-    
+
     <div style={{ minWidth: '100%' }}>
       {(error) && <Alert severity="error">{error}</Alert>}
       <MaterialTable
+        title='Designation List'
         columns={state.columns}
         data={Array.from(state.data)}
         editable={{
