@@ -8,8 +8,7 @@ import Select from '@material-ui/core/Select';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import uuid from 'react-uuid';
 import axios from 'axios'
-
-import useFetch from '../../hooks/useFetch';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,34 +38,60 @@ const AddCompany = () => {
   const classes = useStyles();
   let cmpUUID = uuid();
   const [orgs, setOrgs] = useState([])
-  const [addCompanyData,setCompanyData] = useState({})
+  const [addCompanyData, setCompanyData] = useState({});
+  const [companyAddResponse, setCompanyAddResponse] = useState(false);
 
   useEffect(() => {
     const getAllOrgs = async () => {
       const getOrgs = await axios.get(`https://organization-demo.herokuapp.com/organization/getAllOrganizationsList`, { headers: { token: localStorage.getItem('authToken') } });
-      let menuItems = getOrgs.data.length > 0 && getOrgs.data.map(org => { return {organizationId: org.organizationId, orgName: org.orgName}})
+      let menuItems = getOrgs.data.length > 0 && getOrgs.data.map(org => { return { organizationId: org.orgId, orgName: org.orgName } })
       setOrgs(menuItems);
     }
     getAllOrgs();
   }, [])
   const handleChange = (event) => {
+    console.log(event.target.name)
     if (event.target.name === 'organizationId') {
-      const orgAdd = orgs.filter((organization) => organization.orgName === event.target.value);
+      const orgAdd = orgs.filter((organization) => {
+        console.log('inside filter...', organization)
+        if(organization.organizationId === event.target.value) {
+          return organization
+        }
+      });
+      console.log('orgData...', orgAdd);
       const orgData = {
         orgId: orgAdd[0].organizationId,
-        orgName: orgAdd[0].designationName
+        orgName: orgAdd[0].orgName
       }
+      
       setCompanyData({ ...addCompanyData, organization: orgData });
+    }
+    else {
+      setCompanyData({ ...addCompanyData, [event.target.name]: event.target.value })
     }
   }
 
-  const handleSubmit = () => {
-    
+  const handleSubmit = async (event) => {
+    console.log(addCompanyData)
+    addCompanyData.companyId = event.target.companyId.value;
+    event.preventDefault();
+    console.log('addCompanyData...', addCompanyData);
+    const repsonse = await axios.post(`https://organization-demo.herokuapp.com/company/createCompany`, addCompanyData, {
+      headers: {
+        token: localStorage.getItem('authToken')
+      }
+    });
+    if (repsonse && (repsonse.status === 201 || repsonse.status === 200)) {
+      setCompanyAddResponse(true)
+    }
   }
 
   return (
     <Paper className={classes.root}>
-
+      {companyAddResponse && (<Alert severity="success">
+        <AlertTitle>Success</AlertTitle>
+        Company created successfully!
+      </Alert>)}
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Add Company</Typography>
