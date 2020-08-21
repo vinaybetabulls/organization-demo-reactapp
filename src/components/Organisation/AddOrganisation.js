@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography, Grid, CssBaseline, CircularProgress } from '@material-ui/core';
+import { Paper, Button, TextField, Typography, Grid, CssBaseline, CircularProgress } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -10,6 +10,15 @@ import uuid from 'react-uuid';
 import useFetch from '../../hooks/useFetch';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '60%',
+  },
+  wrapper: {
+    margin: '0px 15px 15px 15px',
+  },
+  title: {
+    padding: '16px 16px 4px 16px',
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -44,9 +53,11 @@ const useStyles = makeStyles((theme) => ({
 const AddOrganisation = () => {
   const classes = useStyles();
   let orgUUID = uuid();
-  const {response: createOrg, error, isLoading, handleChange, handleSubmit} = useFetch({
+  const token = localStorage.getItem('authToken');
+  const {response: createOrg, isAuth, error, isLoading, handleChange, handleSubmit} = useFetch({
     url: `organization/createOrganization`,
-    method: `POST`
+    method: `POST`,
+    token: token
   })
 
   const handleUploadFile = () => {
@@ -55,13 +66,16 @@ const AddOrganisation = () => {
 
   return (
     <React.Fragment>
+      <Paper className={classes.root}>
       <CssBaseline />
       {(isLoading) && <CircularProgress size={24} className={classes.buttonProgress} />}
-      <Typography component="h1" variant="h5" gutterBottom>
-        Add Organisation Details
-      </Typography>
-      <hr />
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+          <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Add Company</Typography>
+        </Grid>
+      </Grid>
       {(error) && <Alert severity="error">{error}</Alert>}
+      <div className={classes.wrapper}>
       <form className={classes.form} noValidate onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
@@ -70,7 +84,7 @@ const AddOrganisation = () => {
               name="orgId"
               label="ID"
               fullWidth
-              autoComplete="given-name" variant="filled" value={orgUUID} disabled
+              autoComplete="given-name" defaultValue={orgUUID} disabled
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -100,7 +114,7 @@ const AddOrganisation = () => {
               autoComplete="shipping address-line2" onChange={handleChange}
             />
           </Grid>
-          <Grid container spacing={3}>
+          {/* <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
               <div className={classes.root}>
                 <input accept="image/*" className={classes.input} id="contained-button-file" type="file" onChange={handleUploadFile} />
@@ -111,13 +125,17 @@ const AddOrganisation = () => {
 
               </div>
             </Grid>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={3}>
-            <Button variant="contained" color="primary" className={classes.button} startIcon={<SaveIcon />}>Save</Button>
+            <Button type="submit" variant="contained" color="primary" className={classes.button} startIcon={<SaveIcon />}>Save</Button>
           </Grid>
         </Grid>
       </form>
-    </React.Fragment>
+    
+      </div>
+      
+      </Paper>
+      </React.Fragment>
   );
 }
 

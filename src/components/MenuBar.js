@@ -14,7 +14,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { NavLink } from "react-router-dom";
-import jwt from 'jsonwebtoken';
+import jwtDecode from 'jwt-decode';
 import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
 
@@ -64,11 +64,18 @@ export default function MenuBar() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const token = localStorage.getItem('authToken');
-  var decodedToken = jwt.decode(token, { complete: true });
-  var dateNow = new Date();
 
   useEffect(() => {
-    if (decodedToken === null || decodedToken.exp < dateNow.getTime()) setAuth(false);
+    if(token) {
+      var decoded = jwtDecode(token);
+      const now = Date.now().valueOf() / 1000
+      if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
+        console.log(`token expired: ${JSON.stringify(decoded)}`)
+        setAuth(false);
+      }
+    } else if (!token) {
+      setAuth(false);
+    }
   },[])
 
 
@@ -105,7 +112,6 @@ export default function MenuBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={handleLogut}>Logout</MenuItem>
     </Menu>
@@ -131,7 +137,8 @@ export default function MenuBar() {
         >
           <Avatar alt="Remy Sharp" src="/broken-image.jpg" />
         </IconButton>
-        <p>Profile</p>
+        <p>My account</p>
+        <p>Logout</p>
       </MenuItem>
     </Menu>
   );

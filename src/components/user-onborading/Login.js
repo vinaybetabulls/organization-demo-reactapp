@@ -8,13 +8,14 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import {Typography, CircularProgress, Paper} from '@material-ui/core';
+import { Typography, CircularProgress, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Alert } from '@material-ui/lab';
 import { green } from '@material-ui/core/colors';
 import { Redirect } from 'react-router';
 import useFetch from '../../hooks/useFetch';
+import jwtDecode from 'jwt-decode';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,15 +46,33 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  const [auth, setAuth] = React.useState(true);
 
-  const {response: authToken, error, isLoading, handleChange, handleSubmit} = useFetch({
+  const { response: authToken, isAuth, error, isLoading, handleChange, handleSubmit } = useFetch({
     url: `user/login`,
     method: `POST`
   })
 
+  const token = localStorage.getItem('authToken');
+  
+  
+  useEffect(() => {
+    if(token) {
+      var decoded = jwtDecode(token);
+      const now = Date.now().valueOf() / 1000
+      if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
+        console.log(`token expired: ${JSON.stringify(decoded)}`)
+        setAuth(false);
+      } 
+    } else if (!token) {
+      setAuth(false);
+    }
+  }, [])
+
   return (
+    // (auth === true) ? <p> not Expired</p> : 
     (localStorage.getItem('authToken')) ? <Redirect to={`/organisation`} /> : <Container component="main" maxWidth="xs">
-      <CssBaseline />
+      <CssBaseline /> 
       {(error) && <Alert severity="error">{error}</Alert>}
       {(isLoading) && <CircularProgress size={50} className={classes.buttonProgress} />}
       <Paper>
@@ -62,9 +81,9 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign in {auth}
           </Typography>
-          <form className={classes.form} noValidate  onSubmit={handleSubmit}>
+          <form className={classes.form} noValidate onSubmit={handleSubmit}>
             <TextField variant="outlined" margin="normal" fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus onChange={handleChange} required />
             <TextField variant="outlined" margin="normal" fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={handleChange} required />
             <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
@@ -84,7 +103,7 @@ export default function SignIn() {
           </form>
         </div>
       </Paper>
-        
+
     </Container>
   );
 }

@@ -11,6 +11,7 @@ import OrganisationsList from '../components/Organisation/OrganisationsList';
 import AddOrganisation from '../components/Organisation/AddOrganisation';
 import Test from '../components/test';
 import ProtectRoute from './ProtectRote';
+import AddCompany from '../components/Company/AddCompany';
 
 const Routes = () => (
   <Switch>
@@ -24,7 +25,7 @@ const Routes = () => (
     <ProtectRoute exact path='/designation' component={DesignationsList} />
     <ProtectRoute exact path='/addorg' component={AddOrganisation} />
     <Route path="/test" component={Test}/>
-    
+    <Route path="/addcomp" component={AddCompany} />
   </Switch>
 );
 
