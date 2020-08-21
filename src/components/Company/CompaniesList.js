@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -11,6 +11,9 @@ import TableRow from '@material-ui/core/TableRow';
 import { Typography, Divider, Button, Grid } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PageviewIcon from '@material-ui/icons/Pageview';
+import { Link } from 'react-router-dom';
+import useFetch from '../../hooks/useFetch';
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: "#3D4A77",
@@ -24,54 +27,26 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 const columns = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
+  { id: 'companyId', label: 'Company Id', minWidth: 170 },
+  { id: 'companyName', label: 'Company Name', minWidth: 100 },
   {
-    id: 'population',
-    label: 'Population',
+    id: 'companyLocation',
+    label: 'Company Location',
     minWidth: 170,
     align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
   },
   {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
+    id: 'orgName',
+    label: 'Organisation',
     minWidth: 170,
     align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toFixed(2),
   },
   { id: 'actions', label: 'Actions', minWidth: 170, align: 'center' },
 ];
 
-function createData(name, code, population, size, actions) {
-  const density = population / size;
-  return { name, code, population, size, density, actions };
-}
 
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('China', 'CN', 1403500365, 9596961, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('Italy', 'IT', 60483973, 301340, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('United States', 'US', 327167434, 9833520, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('Canada', 'CA', 37602103, 9984670, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('Australia', 'AU', 25475400, 7692024, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('Germany', 'DE', 83019200, 357578, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('Ireland', 'IE', 4857000, 70273, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('Mexico', 'MX', 126577691, 1972550, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('Japan', 'JP', 126317000, 377973, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('France', 'FR', 67022000, 640679, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('United Kingdom', 'GB', 67545757, 242495, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('Russia', 'RU', 146793744, 17098246, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('Nigeria', 'NG', 200962417, 923768, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-  createData('Brazil', 'BR', 210147125, 8515767, <><PageviewIcon color="primary" /> {' '} <DeleteIcon color="secondary" /></>),
-];
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -89,6 +64,7 @@ const CompaniesList = () => {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rows, setRows] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -99,6 +75,27 @@ const CompaniesList = () => {
     setPage(0);
   };
 
+  const url = `company/getAllCompaniesList`;
+  const token = localStorage.getItem('authToken');
+  const method = "GET";
+  const { response: companies, isAuth, error, isLoading, fetchData } = useFetch({ url, token, method })
+
+  useEffect(() => {
+    const getAllCompanies = async () => {
+      let res = await fetchData();
+      res = res.map(cmp => {
+        return {companyName: cmp.companyName,
+          companyId: cmp.companyId,
+          companyLocation: cmp.companyLocation,
+          orgName: cmp.organization.orgName,
+          actions: <PageviewIcon color="primary" />
+        }
+      })
+      setRows(res);
+    }
+    getAllCompanies()
+  }, []);
+
   return (
     <Paper className={classes.root}>
       <Grid container spacing={3}>
@@ -106,7 +103,7 @@ const CompaniesList = () => {
           <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Companies List</Typography>
         </Grid>
         <Grid item xs={6}>
-          <Button variant="contained" color="primary" style={{ float: 'right', margin: '14px', backgroundColor:'#3D4A77' }}>Add Company</Button>
+          <Button variant="contained" color="primary" style={{ float: 'right', margin: '14px', backgroundColor:'#3D4A77' }} component={Link} to='/addcomp'>Add Company</Button>
         </Grid>
       </Grid>
 

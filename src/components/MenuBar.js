@@ -14,7 +14,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { NavLink } from "react-router-dom";
-import jwt from 'jsonwebtoken';
+import jwtDecode from 'jwt-decode';
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -61,12 +61,19 @@ export default function MenuBar() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const token = localStorage.getItem('authToken');
-  var decodedToken=jwt.decode(token, {complete: true});
-  var dateNow = new Date();
 
   useEffect(() => {
-    if (decodedToken === null || decodedToken.exp < dateNow.getTime()) setAuth(false);
-  })
+    if(token) {
+      var decoded = jwtDecode(token);
+      const now = Date.now().valueOf() / 1000
+      if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
+        console.log(`token expired: ${JSON.stringify(decoded)}`)
+        setAuth(false);
+      }
+    } else if (!token) {
+      setAuth(false);
+    }
+  },[])
 
 
   const handleProfileMenuOpen = (event) => {
@@ -97,7 +104,6 @@ export default function MenuBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
     </Menu>
@@ -123,7 +129,8 @@ export default function MenuBar() {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>My account</p>
+        <p>Logout</p>
       </MenuItem>
     </Menu>
   );

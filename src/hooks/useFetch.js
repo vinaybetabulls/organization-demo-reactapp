@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import { Link, useHistory } from "react-router-dom";
 const useFetch = ({ url, method, token, input }) => {
-
+  let history = useHistory();
   const [response, setResponse] = useState([]);
   const [appData, setAppData] = useState({});
   const [error, setError] = useState(null);
@@ -14,7 +15,18 @@ const useFetch = ({ url, method, token, input }) => {
   };
 
   const handleSubmit = async (evt) => {
-    evt.preventDefault();  
+    evt.preventDefault();
+    
+    if(evt.target.orgId) {
+      setAppData({ ...appData, orgId: evt.target.orgId.value });
+      appData.orgId = evt.target.orgId.value;
+      console.log(appData);
+    } else if(evt.target.companyId) {
+      console.log(evt.target.companyId.value);
+      setAppData({ ...appData, companyId: evt.target.companyId.value });
+      appData.orgId = evt.target.companyId.value;
+      console.log(appData);
+    }
     fetchData()
   }
 
@@ -22,7 +34,7 @@ const useFetch = ({ url, method, token, input }) => {
     let fetchUrl = `https://organization-demo.herokuapp.com/${url}`;
     console.log(fetchUrl);
     let payload = appData || ``;
-    let authToken = token || ``;
+    let authToken = token || localStorage.getItem('authToken') || ``;
 
     let config = {
       method: method,
@@ -37,12 +49,19 @@ const useFetch = ({ url, method, token, input }) => {
     try {
       const res = await fetch(fetchUrl, config);
       const json = await res.json();
-      console.log(json);
-      if(json.status == 401) setIsAuth(false) 
-      if(json && json.jwt) localStorage.setItem('authToken', json.jwt)
+      if(json.statusCode == 401)
+      {
+        console.log('fghjkl;kjhcxcvbnm,.')
+        setIsAuth(false);
+        localStorage.removeItem("authToken");
+        history.push("/");
+      }
+      if(json && json.jwt) localStorage.setItem('authToken', json.jwt);
       setResponse(json);
       setIsLoading(false);
+      return json;
     } catch (error) {
+      alert('in catch')
       console.log(error);
       setError(error)
       setIsLoading(false);
