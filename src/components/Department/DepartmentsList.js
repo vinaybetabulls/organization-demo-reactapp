@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, forwardRef } from 'react';
 import MaterialTable from 'material-table';
-
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import useFetch from '../../hooks/useFetch';
 import axios from 'axios';
 
@@ -36,6 +37,8 @@ const DepartmentsList = () => {
 
 
   }, []);
+
+  const tableIcons = { Add: forwardRef((props, ref) => <Button ref={ref} variant="contained"  color="primary" style={{ float: 'right', backgroundColor: '#3D4A77' }}>Add Department</Button>), }
 
   const addDepartment = (newData) => {
     return new Promise((resolve, reject) => {
@@ -87,17 +90,19 @@ const DepartmentsList = () => {
   return (
     <div style={{ minWidth: '100%' }}>
       <MaterialTable
+        icons={tableIcons}
         title='Department List'
         columns={state.columns}
         data={Array.from(state.data)}
         options={{
-          search: false
+          search: false,
+          headerStyle: { backgroundColor: '#3D4A77', color: '#FFF' },
+          actionsColumnIndex: -1
         }}
         editable={{
           onRowAdd: addDepartment,
-          onRowDelete: deleteDepartment
-
         }}
+        actions={[rowData => ({ icon: 'delete', tooltip: 'Delete Department', onClick: (event, rowData) => deleteDepartment(rowData), })]}
       />
     </div>
   )

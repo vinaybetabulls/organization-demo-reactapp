@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -10,8 +10,11 @@ import {
   colors,
   makeStyles
 } from '@material-ui/core';
-import MoneyIcon from '@material-ui/icons/Money';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import GroupIcon from '@material-ui/icons/Group';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
+import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import BusinessIcon from '@material-ui/icons/Business';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -33,7 +36,15 @@ const useStyles = makeStyles((theme) => ({
   differenceValue: {
     color: colors.red[900],
     marginRight: theme.spacing(1)
+  },
+  links: {
+    textDecoration: 'none',
+    textTransform: "uppercase",
+  },
+  h6Color: {
+    color: colors.red[600],
   }
+
 }));
 
 const Dashboard = ({ className, ...rest }) => {
@@ -58,7 +69,7 @@ const Dashboard = ({ className, ...rest }) => {
     } else if (!token) {
       setIsLoggedIn(false);
     }
-    
+
     try {
       const getAllCounts = async () => {
         const orgList = await axios.get(`https://organization-demo.herokuapp.com/organization/getAllOrganizationsList`, {
@@ -120,70 +131,32 @@ const Dashboard = ({ className, ...rest }) => {
 
       <Grid container spacing={3}>
         <Grid item xs={4}>
-          <Card
-            className={clsx(classes.root, className)}
-            {...rest}
-          >
-            <CardContent>
-              <Grid
-                container
-                justify="space-between"
-                spacing={3}
-                component={Link} to='/organisation'
-              >
+          <Card className={clsx(classes.root, className)} {...rest} >
+            <CardContent style={{borderLeft: "#4C71DD 6px solid"}}>
+              <Grid container justify="space-between" spacing={3} component={Link} className={classes.links} to='/organisation' >
                 <Grid item>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    variant="h6"
-                  >
-                    Organization
-            </Typography>
-                  <Typography
-                    color="textPrimary"
-                    variant="h3"
-                  >
-                    {orgCount}
-                  </Typography>
+                  <Typography gutterBottom variant="h6" style={{color: "#4C71DD"}}> Organisations </Typography>
+                  <Typography color="textPrimary" variant="h3" > {orgCount} </Typography>
                 </Grid>
                 <Grid item>
-                  <Avatar className={classes.avatar}>
-                    <LocationCityIcon />
+                  <Avatar className={classes.avatar} style={{backgroundColor: "#4C71DD"}}>
+                    <AccountBalanceIcon />
                   </Avatar>
                 </Grid>
               </Grid>
             </CardContent>
-
           </Card>
         </Grid>
         <Grid item xs={4}>
-          <Card
-            className={clsx(classes.root, className)}
-            {...rest}
-          >
-            <CardContent>
-              <Grid
-                container
-                justify="space-between"
-                spacing={3}
-              >
+          <Card className={clsx(classes.root, className)} {...rest} >
+            <CardContent style={{borderLeft:"#1DC88A 6px solid"}}>
+              <Grid container justify="space-between" spacing={3} component={Link} className={classes.links} to='/companies' >
                 <Grid item>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    variant="h6"
-                  >
-                    Companies
-            </Typography>
-                  <Typography
-                    color="textPrimary"
-                    variant="h3"
-                  >
-                    {compCount}
-                  </Typography>
+                  <Typography gutterBottom variant="h6" style={{color: "#1DC88A"}}> Companies </Typography>
+                  <Typography color="textPrimary" variant="h3" > {compCount} </Typography>
                 </Grid>
                 <Grid item>
-                  <Avatar className={classes.avatar}>
+                  <Avatar className={classes.avatar} style={{backgroundColor: "#1DC88A"}}>
                     <BusinessIcon />
                   </Avatar>
                 </Grid>
@@ -193,34 +166,16 @@ const Dashboard = ({ className, ...rest }) => {
           </Card>
         </Grid>
         <Grid item xs={4}>
-          <Card
-            className={clsx(classes.root, className)}
-            {...rest}
-          >
-            <CardContent>
-              <Grid
-                container
-                justify="space-between"
-                spacing={3}
-              >
+          <Card className={clsx(classes.root, className)} {...rest} >
+            <CardContent style={{borderLeft: "#1CBCD1 6px solid"}}>
+              <Grid container justify="space-between" spacing={3} component={Link} className={classes.links} to='/employees' >
                 <Grid item>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    variant="h6"
-                  >
-                    Employees
-            </Typography>
-                  <Typography
-                    color="textPrimary"
-                    variant="h3"
-                  >
-                    {empCount}
-                  </Typography>
+                  <Typography style={{color: "#1CBCD1"}} gutterBottom variant="h6" > Employees </Typography>
+                  <Typography color="textPrimary" variant="h3" > {empCount} </Typography>
                 </Grid>
                 <Grid item>
-                  <Avatar className={classes.avatar}>
-                    <MoneyIcon />
+                  <Avatar className={classes.avatar} style={{backgroundColor: "#1CBCD1"}}>
+                    <AccessibilityNewIcon />
                   </Avatar>
                 </Grid>
               </Grid>
@@ -236,15 +191,14 @@ const Dashboard = ({ className, ...rest }) => {
             className={clsx(classes.root, className)}
             {...rest}
           >
-            <CardContent>
+            <CardContent style={{borderLeft: "#F6C23F 6px solid"}}>
               <Grid
                 container
                 justify="space-between"
-                spacing={3}
+                spacing={3} component={Link} className={classes.links} to='/designation'
               >
                 <Grid item>
-                  <Typography
-                    color="textSecondary"
+                  <Typography style={{color:"#F6C23F"}}
                     gutterBottom
                     variant="h6"
                   >
@@ -258,8 +212,8 @@ const Dashboard = ({ className, ...rest }) => {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Avatar className={classes.avatar}>
-                    <LocationCityIcon />
+                  <Avatar className={classes.avatar} style={{backgroundColor:"#F6C23F"}}>
+                    <AssignmentIndIcon />
                   </Avatar>
                 </Grid>
               </Grid>
@@ -272,17 +226,17 @@ const Dashboard = ({ className, ...rest }) => {
             className={clsx(classes.root, className)}
             {...rest}
           >
-            <CardContent>
+            <CardContent style={{borderLeft:"#E53936 6px solid"}}>
               <Grid
                 container
                 justify="space-between"
-                spacing={3}
+                spacing={3} component={Link} className={classes.links} to='/department'
               >
                 <Grid item>
                   <Typography
                     color="textSecondary"
                     gutterBottom
-                    variant="h6"
+                    variant="h6" className={classes.h6Color}
                   >
                     Departments
             </Typography>
@@ -295,7 +249,7 @@ const Dashboard = ({ className, ...rest }) => {
                 </Grid>
                 <Grid item>
                   <Avatar className={classes.avatar}>
-                    <MoneyIcon />
+                    <GroupIcon />
                   </Avatar>
                 </Grid>
               </Grid>

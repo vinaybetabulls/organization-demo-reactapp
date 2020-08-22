@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, forwardRef } from 'react';
 import MaterialTable from 'material-table';
 import { Alert } from '@material-ui/lab';
+import Button from '@material-ui/core/Button';
 
 import axios from 'axios';
 
 import useFetch from '../../hooks/useFetch';
-// import { reducer, initialState } from '../../reducers/DesignationReducer';
 
 export default function DesignationsList() {
 
-  // const [state1, dispatch] = useReducer(reducer, initialState);
   const [state, setState] = React.useState({
     columns: [
       { title: 'Designation Id', field: 'designationId', editable: 'never' },
@@ -42,6 +41,8 @@ export default function DesignationsList() {
 
 
   }, []);
+
+  const tableIcons = { Add: forwardRef((props, ref) => <Button ref={ref} variant="contained"  color="primary" style={{ float: 'right', backgroundColor: '#3D4A77' }}>Add Designation</Button>), }
 
   const addDesignation = (newData) => {
     return new Promise((resolve, reject) => {
@@ -98,17 +99,19 @@ export default function DesignationsList() {
     <div style={{ minWidth: '100%' }}>
       {(error) && <Alert severity="error">{error}</Alert>}
       <MaterialTable
+        icons={tableIcons}
         title='Designation List'
         columns={state.columns}
         data={Array.from(state.data)}
         options={{
-          search: false
+          search: false,
+          headerStyle: { backgroundColor: '#3D4A77', color: '#FFF' },
+          actionsColumnIndex: -1
         }}
         editable={{
           onRowAdd: addDesignation,
-          onRowDelete: deleteDesignation
-
         }}
+        actions={[rowData => ({ icon: 'delete', tooltip: 'Delete Designation', onClick: (event, rowData) => deleteDesignation(rowData), })]}
       />
     </div>
   );

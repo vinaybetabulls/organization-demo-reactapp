@@ -159,15 +159,11 @@ export default function MenuBar(props) {
           {isLoggedIn && (
             <>
               <nav>
-                <NavLink variant="button" color="inherit" to="/organisation" className={classes.link}> Organisations </NavLink>
-                <NavLink variant="button" color="inherit" to="/companies" className={classes.link}>
-                  Companies </NavLink>
-                <NavLink variant="button" color="inherit" to="/department" className={classes.link}>
-                  Departments </NavLink>
-                <NavLink variant="button" color="inherit" to="/designation" className={classes.link}>
-                  Designations </NavLink>
-                <NavLink variant="button" color="inherit" to="/employees" className={classes.link}>
-                  Employees </NavLink>
+                <NavLink variant="button" color="inherit" to="/organisation" className={classes.link} activeStyle={{fontWeight: "bold",}}> Organisations </NavLink>
+                <NavLink variant="button" color="inherit" to="/companies" className={classes.link} activeStyle={{fontWeight: "bold",}}> Companies </NavLink>
+                <NavLink variant="button" color="inherit" to="/department" className={classes.link} activeStyle={{fontWeight: "bold",}}> Departments </NavLink>
+                <NavLink variant="button" color="inherit" to="/designation" className={classes.link} activeStyle={{fontWeight: "bold",}}> Designations </NavLink>
+                <NavLink variant="button" color="inherit" to="/employees" className={classes.link} activeStyle={{fontWeight: "bold",}}> Employees </NavLink>
               </nav>
               <div className={classes.sectionDesktop}>
                 <IconButton
