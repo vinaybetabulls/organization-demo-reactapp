@@ -14,6 +14,7 @@ import MoneyIcon from '@material-ui/icons/Money';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import BusinessIcon from '@material-ui/icons/Business';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -111,6 +112,7 @@ const Dashboard = ({ className, ...rest }) => {
                 container
                 justify="space-between"
                 spacing={3}
+                component={Link} to='/organisation'
               >
                 <Grid item>
                   <Typography
