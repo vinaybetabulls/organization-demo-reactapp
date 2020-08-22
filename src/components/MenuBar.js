@@ -60,7 +60,7 @@ export default function MenuBar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [auth, setAuth] = React.useState(true);
   const history = useHistory();
-  const [isLoggedIn] = useContext(LoginContext);
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -73,9 +73,14 @@ export default function MenuBar() {
       const now = Date.now().valueOf() / 1000
       if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
         setAuth(false);
+        setIsLoggedIn(false)
+      }
+      else {
+        setIsLoggedIn(true)
       }
     } else if (!token) {
       setAuth(false);
+      setIsLoggedIn(false);
     }
   }, [])
 
