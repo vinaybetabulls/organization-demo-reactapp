@@ -5,7 +5,14 @@ export const LoginContext = createContext();
 
 // Create a provider for components to consume and subscribe to changes
 export const LoginContextProvider = props => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  let loginValue = false;
+  if(localStorage.getItem('authToken')){
+    loginValue = true;
+  }
+  else {
+    loginValue = false;
+  }
+  const [isLoggedIn, setIsLoggedIn] = useState(loginValue);
 
   return (
     <LoginContext.Provider value={[isLoggedIn, setIsLoggedIn]}>
