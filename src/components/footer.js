@@ -10,7 +10,7 @@ function Copyright() {
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="#">
-                Welcome to Organization Demo
+                Welcome to Organization
       </Link>{' '}
             {new Date().getFullYear()}
             {'.'}

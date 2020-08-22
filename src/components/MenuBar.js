@@ -155,7 +155,7 @@ export default function MenuBar() {
       <AppBar position="static">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer" > <MenuIcon /> </IconButton>
-          <NavLink variant="button" color="inherit" className={classes.link} to="/dashboard" variant="h6" noWrap> Organization-Demo </NavLink>
+          <NavLink variant="button" color="inherit" className={classes.link} to="/dashboard" noWrap> Organization </NavLink>
           <div className={classes.grow} />
           {isLoggedIn && (
             <>
