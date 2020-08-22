@@ -82,7 +82,7 @@ export default function MenuBar() {
       setAuth(false);
       setIsLoggedIn(false);
     }
-  }, [])
+  }, [isLoggedIn])
 
 
   const handleProfileMenuOpen = (event) => {
@@ -103,6 +103,7 @@ export default function MenuBar() {
   };
 
   const handleLogut = () => {
+    setIsLoggedIn(false);
     localStorage.removeItem("authToken");
     history.push("/");
   }
