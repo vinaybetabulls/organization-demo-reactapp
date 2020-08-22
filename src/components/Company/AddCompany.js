@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Paper, Grid, Typography, Button, TextField, Divider } from '@material-ui/core'
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { CircularProgress, Select, FormControl, MenuItem, InputLabel, Backdrop, Paper, Grid, Typography, Button, TextField } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { makeStyles } from '@material-ui/core/styles';
+import SaveIcon from '@material-ui/icons/Save';
+
 import uuid from 'react-uuid';
 import axios from 'axios'
-import { Alert, AlertTitle } from '@material-ui/lab';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,12 +22,19 @@ const useStyles = makeStyles((theme) => ({
     margin: '0px 15px 15px 15px',
   },
   formControl: {
-    margin: theme.spacing(1),
-    minWidth: 200,
+    //margin: theme.spacing(1),
+    minWidth: 700,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
   },
   button: {
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
 }));
 
@@ -41,7 +45,7 @@ const AddCompany = () => {
   const [addCompanyData, setCompanyData] = useState({});
   const [companyAddResponse, setCompanyAddResponse] = useState(false);
   const [companyErrorResponse, setCompanyErrorResponse] = useState({});
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const getAllOrgs = async () => {
       const getOrgs = await axios.get(`https://organization-demo.herokuapp.com/organization/getAllOrganizationsList`, { headers: { token: localStorage.getItem('authToken') } });
@@ -70,6 +74,7 @@ const AddCompany = () => {
   }
 
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     addCompanyData.companyId = event.target.companyId.value;
     event.preventDefault();
     try {
@@ -79,17 +84,19 @@ const AddCompany = () => {
         }
       });
       if (repsonse && (repsonse.status === 201 || repsonse.status === 200)) {
-        setCompanyAddResponse(true)
+        setCompanyAddResponse(true);
+        setIsLoading(false);
       }
       else {
         setCompanyErrorResponse({ message: repsonse.message })
       }
-    } catch (error) {      
-      if(!error.status) {
+    } catch (error) {
+      setIsLoading(false);
+      if (!error.status) {
         setCompanyErrorResponse({ message: 'Please provide valid data' })
       }
       else {
-        setCompanyErrorResponse({message: error.status});
+        setCompanyErrorResponse({ message: error.status });
       }
     }
 
@@ -97,43 +104,45 @@ const AddCompany = () => {
 
   return (
     <Paper className={classes.root}>
+      {
+        (isLoading) && <Backdrop className={classes.backdrop} open={isLoading}>
+          <CircularProgress size={60} thickness={4} color="inherit" />
+        </Backdrop>
+      }
+      <Grid container>
+        <Grid item xs={6}>
+          <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Add Company</Typography>
+        </Grid>
+      </Grid>
       {(companyAddResponse && !companyErrorResponse.message) && (<Alert severity="success">
-        <AlertTitle>Success</AlertTitle>
         Company created successfully!
       </Alert>)}
       {(companyErrorResponse.message && !companyAddResponse) && (<Alert severity="error">
         <AlertTitle>Error</AlertTitle>
         {companyErrorResponse.message}
       </Alert>)}
-      <Grid container spacing={3}>
-        <Grid item xs={6}>
-          <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Add Company</Typography>
-        </Grid>
-      </Grid>
       <div className={classes.wrapper}>
-        <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField id="companyId" name="companyId" label="ID" fullWidth autoComplete="given-name" defaultValue={cmpUUID} disabled />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField id="companyName" name="companyName" label="Name" fullWidth required onChange={handleChange} />
+            <Grid item xs={12}>
+              <TextField id="companyName" name="companyName" label="Name" fullWidth required onChange={handleChange} autoFocus/>
             </Grid>
           </Grid>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField id="companyLocation" name="companyLocation" label="Location" fullWidth required onChange={handleChange} />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <FormControl className={classes.formControl}>
                 <InputLabel id="demo-simple-select-autowidth-label">Organisation</InputLabel>
                 <Select
                   labelId="demo-simple-select-autowidth-label"
                   id="organizationId"
                   name="organizationId"
-                  onChange={handleChange}
-                  fullWidth
-                >
+                  onChange={handleChange} >
                   <MenuItem value=""> <em>None</em> </MenuItem>
                   {
                     orgs.length > 0 && orgs.map(org => <MenuItem key={org.organizationId} value={org.organizationId}>{org.orgName}</MenuItem>)
@@ -141,10 +150,10 @@ const AddCompany = () => {
                 </Select>
               </FormControl>
             </Grid>
-          </Grid>
-          <Divider />
-          <Grid item xs={12} sm={6}>
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit} > Add </Button>
+
+            <Grid item xs={12} sm={3}>
+              <Button type="submit" variant="contained" color="primary" className={classes.button} startIcon={<SaveIcon />}>Add</Button>
+            </Grid>
           </Grid>
         </form>
       </div>

@@ -26,7 +26,7 @@ const Routes = () => (
       <ProtectRoute exact path='/addorg' component={AddOrganisation} />
       <ProtectRoute exact path='/dashboard' component={Dashboard} />
       {/*<Route path="/test" component={Test}/>*/}
-      <Route path="/addcomp" component={AddCompany} />
+      <ProtectRoute exact path="/addcomp" component={AddCompany} />
   </Switch>
 );
 

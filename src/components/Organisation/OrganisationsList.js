@@ -71,7 +71,7 @@ const OrganisationsList = () => {
     const getOrganizationList = async () => {
       let organizationList = await fetchData();
 
-      if (organizationList.length > 0) {
+      if ( organizationList && organizationList.length > 0) {
         organizationList = organizationList.map(organization => {
           return {
             orgId: organization.orgId,
@@ -114,7 +114,7 @@ const OrganisationsList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+            {(rows.length > 0 ) ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                   {columns.map((column) => {
@@ -127,7 +127,8 @@ const OrganisationsList = () => {
                   })}
                 </TableRow>
               );
-            })}
+            }) : <TableRow>
+            <TableCell colSpan={5} style={{'text-align': 'center'}}><Typography component="h2" variant="h6" className={classes.title}  color="primary" gutterBottom>No records found.</Typography></TableCell></TableRow>}
           </TableBody>
         </Table>
       </TableContainer>

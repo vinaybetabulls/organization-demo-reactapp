@@ -8,7 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { Typography, CircularProgress, Paper } from '@material-ui/core';
+import { Backdrop, Typography, CircularProgress, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Alert } from '@material-ui/lab';
@@ -18,6 +18,11 @@ import useFetch from '../../hooks/useFetch';
 import jwtDecode from 'jwt-decode';
 
 const useStyles = makeStyles((theme) => ({
+
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
   paper: {
     marginTop: theme.spacing(3),
     display: 'flex',
@@ -54,14 +59,14 @@ export default function SignIn() {
   })
 
   const token = localStorage.getItem('authToken');
-  
+
   useEffect(() => {
-    if(token) {
+    if (token) {
       var decoded = jwtDecode(token);
       const now = Date.now().valueOf() / 1000
       if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
         setAuth(false);
-      } 
+      }
     } else if (!token) {
       setAuth(false);
     }
@@ -72,7 +77,11 @@ export default function SignIn() {
     (localStorage.getItem('authToken')) ? <Redirect to={`/dashboard`} /> : <Container component="main" maxWidth="xs">
       <CssBaseline /> 
       {(error) && <Alert severity="error">{error}</Alert>}
-      {(isLoading) && <CircularProgress size={50} className={classes.buttonProgress} />}
+      {
+        (isLoading) && <Backdrop className={classes.backdrop} open={isLoading}>
+          <CircularProgress size={60} thickness={4} color="inherit" />
+        </Backdrop>
+      }
       <Paper>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>

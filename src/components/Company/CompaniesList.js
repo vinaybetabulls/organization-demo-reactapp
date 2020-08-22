@@ -84,7 +84,8 @@ const CompaniesList = () => {
     const getAllCompanies = async () => {
       let res = await fetchData();
       res = res.map(cmp => {
-        return {companyName: cmp.companyName,
+        return {
+          companyName: cmp.companyName,
           companyId: cmp.companyId,
           companyLocation: cmp.companyLocation,
           orgName: cmp.organization.orgName,
@@ -103,7 +104,7 @@ const CompaniesList = () => {
           <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Companies List</Typography>
         </Grid>
         <Grid item xs={6}>
-          <Button variant="contained" color="primary" style={{ float: 'right', margin: '14px', backgroundColor:'#3D4A77' }} component={Link} to='/addcomp'>Add Company</Button>
+          <Button variant="contained" color="primary" style={{ float: 'right', margin: '14px', backgroundColor: '#3D4A77' }} component={Link} to='/addcomp'>Add Company</Button>
         </Grid>
       </Grid>
 
@@ -123,7 +124,7 @@ const CompaniesList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+            {(rows.length > 0) ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                   {columns.map((column) => {
@@ -136,7 +137,8 @@ const CompaniesList = () => {
                   })}
                 </TableRow>
               );
-            })}
+            }) : <TableRow>
+                <TableCell colSpan={5} style={{ 'text-align': 'center' }}><Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>No records found.</Typography></TableCell></TableRow>}
           </TableBody>
         </Table>
       </TableContainer>

@@ -1,56 +1,37 @@
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
+import { Paper, MenuItem, Typography, Grid, Select, FormControl, InputLabel, TextField, Button, Backdrop, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import { Paper } from '@material-ui/core';
-import MenuItem from '@material-ui/core/MenuItem';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import SaveIcon from '@material-ui/icons/Save';
 
 import axios from 'axios';
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(3),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '10px 15px'
+  root: {
+    width: '60%',
+  },
+  container: {
+    maxHeight: 340,
+  },
+  title: {
+    padding: '16px 16px 4px 16px',
   },
   wrapper: {
-    maxWidth: '500px',
+    margin: '0px 15px 15px 15px',
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+  formControl: {
+    //margin: theme.spacing(1),
+    minWidth: 700,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
+  },
+  button: {
     marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1),
   },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-  root: {
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1),
-      width: '25ch',
-    },
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
 }));
 
@@ -61,6 +42,7 @@ const AddEmployee = () => {
   const [companiesList, setCopaniesList] = React.useState([])
   const [addEmployeesData, setEmployeesData] = React.useState({})
   const [employeeAddResponse, setEmployeeAddResponse] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
     /**
@@ -147,6 +129,7 @@ const AddEmployee = () => {
 
   }
   const addEmployee = async () => {
+    setIsLoading(true);
     try {
       const repsonse = await axios.post(`https://organization-demo.herokuapp.com/employee/createEmployee`, addEmployeesData, {
         headers: {
@@ -155,167 +138,126 @@ const AddEmployee = () => {
       });
       if (repsonse && (repsonse.status === 201 || repsonse.status === 200)) {
         setEmployeeAddResponse(true)
+        setIsLoading(false);
       }
       else {
         setEmployeeAddResponse('error');
+        setIsLoading(false);
       }
     } catch (error) {
       setEmployeeAddResponse('error');
+      setIsLoading(false);
     }
 
   }
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      {employeeAddResponse && (<Alert severity="success">
-        <AlertTitle>Success</AlertTitle>
+    <Paper className={classes.root}>
+      {
+        (isLoading) && <Backdrop className={classes.backdrop} open={isLoading}>
+          <CircularProgress size={60} thickness={4} color="inherit" />
+        </Backdrop>
+      }
+      <Grid container>
+        <Grid item xs={6}>
+          <Typography component="h2" variant="h6" className={classes.title} color="primary" gutterBottom>Add Employee</Typography>
+        </Grid>
+      </Grid>
+      {(employeeAddResponse && !employeeAddResponse.message) && (<Alert severity="success">
         Employee created successfully!
       </Alert>)}
       {employeeAddResponse === 'error' && (<Alert severity="error">
         <AlertTitle>Error</AlertTitle>
         Employee creation failed!
       </Alert>)}
-      <Paper className={classes.wrapper}>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Add Employee
-        </Typography>
-          <form className={classes.form} noValidate>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  autoComplete="employee fname"
-                  name="employeeFirstName"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="empFname"
-                  label="Employee First Name"
-                  autoFocus
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  autoComplete="employee lname"
-                  name="employeeLastName"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="empLname"
-                  label="Employee Last Name"
-                  autoFocus
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  autoComplete="employee email"
-                  name="employeeEmail"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="empEmail"
-                  label="Employee Email"
-                  autoFocus
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  autoComplete="employee location"
-                  name="employeeLocation"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="empLocation"
-                  label="Employee Location"
-                  autoFocus
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <TextField
-                  autoComplete="employee Phone"
-                  name="phoneNumber"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="empPhone"
-                  label="Employee Phone"
-                  autoFocus
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <FormControl required className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-helper-label">Designation</InputLabel>
-                  <Select
-                    labelId="standard-select-designation"
-                    id="standard-select-designation"
-                    onChange={handleChange}
-                    name="designation"
-                  >
-                    {designationsList.length > 0 && designationsList.map((option) => (
-                      <MenuItem key={option.id} value={option.designationName}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <FormControl required className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-helper-label">Department</InputLabel>
-                  <Select
-                    labelId="standard-select-department"
-                    id="standard-select-department"
-                    onChange={handleChange}
-                    name="department"
-                  >
-                    {departmentList.length > 0 && departmentList.map((option) => (
-                      <MenuItem key={option.id} value={option.departmentName} >
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <FormControl required className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-helper-label">Company</InputLabel>
-                  <Select
-                    labelId="standard-select-company"
-                    id="standard-select-company"
-                    onChange={handleChange}
-                    name="company"
-                  >
-                    {companiesList.length > 0 && companiesList.map((option) => (
-                      <MenuItem key={option.id} value={option.companyName}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+      <div className={classes.wrapper}>
+        <form className={classes.form} noValidate>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <TextField autoComplete="employee fname" name="employeeFirstName" required fullWidth id="empFname" label="First Name" autoFocus onChange={handleChange} />
             </Grid>
-            <Button
-              type="button"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={addEmployee}
-            >
-              Add Employee
-          </Button>
-          </form>
-        </div>
-      </Paper>
-    </Container>
+            <Grid item xs={12} sm={6}>
+              <TextField autoComplete="employee lname" name="employeeLastName" required fullWidth id="empLname" label="Last Name" onChange={handleChange} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                autoComplete="employee email"
+                name="employeeEmail"
+                required
+                fullWidth
+                id="empEmail"
+                label="Employee Email"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                autoComplete="employee Phone"
+                name="phoneNumber"
+                required
+                fullWidth
+                id="empPhone"
+                label="Employee Phone"
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl required className={classes.formControl}>
+                <InputLabel id="demo-simple-select-helper-label">Designation</InputLabel>
+                <Select
+                  labelId="standard-select-designation"
+                  id="standard-select-designation"
+                  onChange={handleChange}
+                  name="designation"
+                >
+                  {designationsList.length > 0 && designationsList.map((option) => (
+                    <MenuItem key={option.id} value={option.designationName}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <FormControl required className={classes.formControl}>
+                <InputLabel id="demo-simple-select-helper-label">Department</InputLabel>
+                <Select
+                  labelId="standard-select-department"
+                  id="standard-select-department"
+                  onChange={handleChange}
+                  name="department"
+                >
+                  {departmentList.length > 0 && departmentList.map((option) => (
+                    <MenuItem key={option.id} value={option.departmentName} >
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <FormControl required className={classes.formControl}>
+                <InputLabel id="demo-simple-select-helper-label">Company</InputLabel>
+                <Select
+                  labelId="standard-select-company"
+                  id="standard-select-company"
+                  onChange={handleChange}
+                  name="company"
+                >
+                  {companiesList.length > 0 && companiesList.map((option) => (
+                    <MenuItem key={option.id} value={option.companyName}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Button type="button" variant="contained" color="primary" className={classes.button} startIcon={<SaveIcon />} onClick={addEmployee}>Add</Button>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+    </Paper>
   )
 }
 

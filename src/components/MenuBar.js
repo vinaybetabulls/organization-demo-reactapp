@@ -54,11 +54,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuBar() {
+export default function MenuBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [auth, setAuth] = React.useState(true);
+  //const [auth, setAuth] = React.useState(true);
+  let auth = props.auth;
   const history = useHistory();
   const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
 
@@ -72,14 +73,12 @@ export default function MenuBar() {
       var decoded = jwtDecode(token);
       const now = Date.now().valueOf() / 1000
       if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
-        setAuth(false);
         setIsLoggedIn(false)
       }
       else {
         setIsLoggedIn(true)
       }
     } else if (!token) {
-      setAuth(false);
       setIsLoggedIn(false);
     }
   }, [isLoggedIn])
@@ -155,7 +154,7 @@ export default function MenuBar() {
       <AppBar position="static">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer" > <MenuIcon /> </IconButton>
-          <NavLink variant="button" color="inherit" className={classes.link} to="/dashboard" noWrap> Organization </NavLink>
+          <Typography className={classes.title} variant="h6" noWrap> Organisations </Typography>
           <div className={classes.grow} />
           {isLoggedIn && (
             <>
