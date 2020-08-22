@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -15,6 +15,8 @@ import LocationCityIcon from '@material-ui/icons/LocationCity';
 import BusinessIcon from '@material-ui/icons/Business';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
+import { LoginContext } from '../context/LoginContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +43,22 @@ const Dashboard = ({ className, ...rest }) => {
   const [empCount, setEmpCount] = React.useState(0);
   const [desigCount, setDesigCount] = React.useState(0);
   const [departmentCount, setDepartmentCount] = React.useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
+  const token = localStorage.getItem('authToken');
   React.useEffect(() => {
+    if (token) {
+      var decoded = jwtDecode(token);
+      const now = Date.now().valueOf() / 1000
+      if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
+        setIsLoggedIn(false)
+      }
+      else {
+        setIsLoggedIn(true)
+      }
+    } else if (!token) {
+      setIsLoggedIn(false);
+    }
+    
     try {
       const getAllCounts = async () => {
         const orgList = await axios.get(`https://organization-demo.herokuapp.com/organization/getAllOrganizationsList`, {
@@ -96,7 +113,7 @@ const Dashboard = ({ className, ...rest }) => {
     } catch (error) {
 
     }
-  })
+  }, [isLoggedIn])
 
   return (
     <>      {localStorage.getItem('authToken') && (<>
