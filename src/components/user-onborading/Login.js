@@ -69,7 +69,7 @@ export default function SignIn() {
 
   return (
     // (auth === true) ? <p> not Expired</p> : 
-    (localStorage.getItem('authToken')) ? <Redirect to={`/organisation`} /> : <Container component="main" maxWidth="xs">
+    (localStorage.getItem('authToken')) ? <Redirect to={`/dashboard`} /> : <Container component="main" maxWidth="xs">
       <CssBaseline /> 
       {(error) && <Alert severity="error">{error}</Alert>}
       {(isLoading) && <CircularProgress size={50} className={classes.buttonProgress} />}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -17,6 +17,7 @@ import { NavLink } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
 import Avatar from '@material-ui/core/Avatar';
 import { useHistory } from 'react-router';
+import { LoginContext } from '../context/LoginContext'
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -59,6 +60,7 @@ export default function MenuBar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [auth, setAuth] = React.useState(true);
   const history = useHistory();
+  const [isLoggedIn] = useContext(LoginContext);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -66,7 +68,7 @@ export default function MenuBar() {
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
-    if(token) {
+    if (token) {
       var decoded = jwtDecode(token);
       const now = Date.now().valueOf() / 1000
       if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
@@ -75,7 +77,7 @@ export default function MenuBar() {
     } else if (!token) {
       setAuth(false);
     }
-  },[])
+  }, [])
 
 
   const handleProfileMenuOpen = (event) => {
@@ -149,7 +151,7 @@ export default function MenuBar() {
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer" > <MenuIcon /> </IconButton>
           <Typography className={classes.title} variant="h6" noWrap> Material-UI </Typography>
           <div className={classes.grow} />
-          {auth && (
+          {isLoggedIn && (
             <>
               <nav>
                 <NavLink variant="button" color="inherit" to="/organisation" className={classes.link}> Organisations </NavLink>

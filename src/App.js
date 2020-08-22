@@ -5,6 +5,7 @@ import MenuBar from './components/MenuBar';
 import Footer from './components/footer';
 import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { LoginContextProvider } from './context/LoginContext';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -19,11 +20,13 @@ function App() {
   const classes = useStyles();
   return (
     <>
-      <MenuBar />
-      <Container className={classes.paper}>
-        <Routes />
-      </Container>
-      <Footer />
+      <LoginContextProvider>
+        <MenuBar />
+        <Container className={classes.paper}>
+          <Routes />
+        </Container>
+        <Footer />
+      </LoginContextProvider>
     </>
   );
 }

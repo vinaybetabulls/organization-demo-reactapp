@@ -9,23 +9,24 @@ import EmployeesList from '../components/Employee/EmployeesList';
 import AddEmployee from '../components/Employee/AddEmployee';
 import OrganisationsList from '../components/Organisation/OrganisationsList';
 import AddOrganisation from '../components/Organisation/AddOrganisation';
-import Test from '../components/test';
+import Dashboard from '../components/dashboard';
 import ProtectRoute from './ProtectRote';
 import AddCompany from '../components/Company/AddCompany';
 
 const Routes = () => (
   <Switch>
-    <Route path="/register" component={Registration} />
-    <Route exact path="/" component={Login} />
-    <ProtectRoute exact path='/organisation' component={OrganisationsList} />
-    <ProtectRoute exact path='/companies' component={CompaniesList} />
-    <ProtectRoute exact path='/employees' component={EmployeesList} />
-    <ProtectRoute exact path='/addEmployee' component={AddEmployee} />
-    <ProtectRoute exact path='/department' component={DepartmentsList} />
-    <ProtectRoute exact path='/designation' component={DesignationsList} />
-    <ProtectRoute exact path='/addorg' component={AddOrganisation} />
-    <Route path="/test" component={Test}/>
-    <Route path="/addcomp" component={AddCompany} />
+      <Route path="/register" component={Registration} />
+      <Route exact path="/" component={Login} />
+      <ProtectRoute exact path='/organisation' component={OrganisationsList} />
+      <ProtectRoute exact path='/companies' component={CompaniesList} />
+      <ProtectRoute exact path='/employees' component={EmployeesList} />
+      <ProtectRoute exact path='/addEmployee' component={AddEmployee} />
+      <ProtectRoute exact path='/department' component={DepartmentsList} />
+      <ProtectRoute exact path='/designation' component={DesignationsList} />
+      <ProtectRoute exact path='/addorg' component={AddOrganisation} />
+      <ProtectRoute exact path='/dashboard' component={Dashboard} />
+      {/*<Route path="/test" component={Test}/>*/}
+      <Route path="/addcomp" component={AddCompany} />
   </Switch>
 );
 

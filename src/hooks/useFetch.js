@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios';
 import { Link, useHistory } from "react-router-dom";
+import { LoginContext } from '../context/LoginContext'
 const useFetch = ({ url, method, token, input }) => {
   let history = useHistory();
   const [response, setResponse] = useState([]);
@@ -9,6 +10,7 @@ const useFetch = ({ url, method, token, input }) => {
   const [isAuth, setIsAuth] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [successResponse, setSuccessResponse] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useContext(LoginContext);
 
   const handleChange = (event) => {
     setAppData({ ...appData, [event.target.name]: event.target.value });
@@ -16,11 +18,11 @@ const useFetch = ({ url, method, token, input }) => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    
-    if(evt.target.orgId) {
+
+    if (evt.target.orgId) {
       setAppData({ ...appData, orgId: evt.target.orgId.value });
       appData.orgId = evt.target.orgId.value;
-    } else if(evt.target.companyId) {
+    } else if (evt.target.companyId) {
       setAppData({ ...appData, companyId: evt.target.companyId.value });
       appData.orgId = evt.target.companyId.value;
     }
@@ -47,8 +49,7 @@ const useFetch = ({ url, method, token, input }) => {
       const res = await fetch(fetchUrl, config);
       const json = await res.json();
       setSuccessResponse(true);
-      if(json.statusCode === 401)
-      {
+      if (json.statusCode === 401) {
         setSuccessResponse(false);
         setIsAuth(false);
         setIsLoading(false);
@@ -56,15 +57,18 @@ const useFetch = ({ url, method, token, input }) => {
         history.push("/");
         return;
       }
-      if(json.statusCode >= 399 && json.statusCode <= 500) {
+      if (json.statusCode >= 399 && json.statusCode <= 500) {
         setError(json.message)
         setSuccessResponse(false);
         setIsLoading(false);
         return
       }
-      if(json && json.jwt) localStorage.setItem('authToken', json.jwt);
+      if (json && json.jwt) {
+        localStorage.setItem('authToken', json.jwt);
+        setIsLoggedIn(true)
+      };
       setResponse(json);
-      
+
       setIsLoading(false);
       return json;
     } catch (error) {
