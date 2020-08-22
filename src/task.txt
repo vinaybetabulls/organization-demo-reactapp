@@ -6,7 +6,7 @@ Pending Tasks:
 5 - registration functionality
 
 Design:
-1 - view pages
+1 - view pages - cancelled
 2 - add pages
 3 - profile page
 4 - add button for Org, cmp, emp

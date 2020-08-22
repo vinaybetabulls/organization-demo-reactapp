@@ -53,11 +53,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuBar() {
+export default function MenuBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [auth, setAuth] = React.useState(true);
+  //const [auth, setAuth] = React.useState(true);
+  let auth = props.auth;
   const history = useHistory();
 
   const isMenuOpen = Boolean(anchorEl);
@@ -66,15 +67,15 @@ export default function MenuBar() {
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
-    if(token) {
-      var decoded = jwtDecode(token);
-      const now = Date.now().valueOf() / 1000
-      if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
-        setAuth(false);
-      }
-    } else if (!token) {
-      setAuth(false);
-    }
+    // if(token) {
+    //   var decoded = jwtDecode(token);
+    //   const now = Date.now().valueOf() / 1000
+    //   if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
+    //     setAuth(false);
+    //   }
+    // } else if (!token) {
+    //   setAuth(false);
+    // }
   },[])
 
 
@@ -147,7 +148,7 @@ export default function MenuBar() {
       <AppBar position="static">
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer" > <MenuIcon /> </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap> Material-UI </Typography>
+          <Typography className={classes.title} variant="h6" noWrap> Organisations </Typography>
           <div className={classes.grow} />
           {auth && (
             <>
