@@ -70,7 +70,6 @@ export default function MenuBar() {
       var decoded = jwtDecode(token);
       const now = Date.now().valueOf() / 1000
       if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
-        console.log(`token expired: ${JSON.stringify(decoded)}`)
         setAuth(false);
       }
     } else if (!token) {

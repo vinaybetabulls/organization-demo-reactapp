@@ -55,10 +55,8 @@ export default function DesignationsList() {
         }
       })
         .then((response) => {
-          console.log('newData', newData);
           resolve()
           setState((prevState) => {
-            console.log('..prevState add data..', prevState)
             const data = [...prevState.data];
             data.push({ designationId: response.data.designationId, designationName: response.data.designationName });
             return { ...prevState, data };

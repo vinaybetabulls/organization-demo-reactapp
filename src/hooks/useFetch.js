@@ -8,10 +8,10 @@ const useFetch = ({ url, method, token, input }) => {
   const [error, setError] = useState(null);
   const [isAuth, setIsAuth] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [successResponse, setSuccessResponse] = useState(false);
 
   const handleChange = (event) => {
     setAppData({ ...appData, [event.target.name]: event.target.value });
-    console.log(appData);
   };
 
   const handleSubmit = async (evt) => {
@@ -20,19 +20,15 @@ const useFetch = ({ url, method, token, input }) => {
     if(evt.target.orgId) {
       setAppData({ ...appData, orgId: evt.target.orgId.value });
       appData.orgId = evt.target.orgId.value;
-      console.log(appData);
     } else if(evt.target.companyId) {
-      console.log(evt.target.companyId.value);
       setAppData({ ...appData, companyId: evt.target.companyId.value });
       appData.orgId = evt.target.companyId.value;
-      console.log(appData);
     }
     fetchData()
   }
 
   const fetchData = async () => {
     let fetchUrl = `https://organization-demo.herokuapp.com/${url}`;
-    console.log(fetchUrl);
     let payload = appData || ``;
     let authToken = token || localStorage.getItem('authToken') || ``;
 
@@ -44,20 +40,31 @@ const useFetch = ({ url, method, token, input }) => {
       },
     }
     if (method != "GET") config.body = JSON.stringify(payload);
-    console.log(config);
     setIsLoading(true);
+    setSuccessResponse(false);
+    setError(false);
     try {
       const res = await fetch(fetchUrl, config);
       const json = await res.json();
-      if(json.statusCode == 401)
+      setSuccessResponse(true);
+      if(json.statusCode === 401)
       {
-        console.log('fghjkl;kjhcxcvbnm,.')
+        setSuccessResponse(false);
         setIsAuth(false);
+        setIsLoading(false);
         localStorage.removeItem("authToken");
         history.push("/");
+        return;
+      }
+      if(json.statusCode >= 399 && json.statusCode <= 500) {
+        setError(json.message)
+        setSuccessResponse(false);
+        setIsLoading(false);
+        return
       }
       if(json && json.jwt) localStorage.setItem('authToken', json.jwt);
       setResponse(json);
+      
       setIsLoading(false);
       return json;
     } catch (error) {
@@ -73,7 +80,7 @@ const useFetch = ({ url, method, token, input }) => {
   //   console.log(response)
   // }, [input]);
 
-  return { response, isAuth, error, isLoading, handleChange, handleSubmit, fetchData };
+  return { response, isAuth, error, isLoading, handleChange, handleSubmit, fetchData, successResponse };
 }
 
 export default useFetch 

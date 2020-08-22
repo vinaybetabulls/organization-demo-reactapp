@@ -49,10 +49,8 @@ const DepartmentsList = () => {
         }
       })
         .then((response) => {
-          console.log('newData', newData);
           resolve()
           setState((prevState) => {
-            console.log('..prevState add data..', prevState)
             const data = [...prevState.data];
             data.push({ departmentId: response.data.departmentId, departmentName: response.data.departmentName });
             return { ...prevState, data };
@@ -77,7 +75,6 @@ const DepartmentsList = () => {
         })
         resolve();
         setState((prevState) => {
-          console.log(departmentList.data)
           const data = departmentList.data;
           return { ...prevState, data };
         });

@@ -131,7 +131,6 @@ const AddEmployee = () => {
         companyId: companyAdd[0].companyId,
         companyName: companyAdd[0].companyName
       }
-      console.log('before..company change..', addEmployeesData)
       setEmployeesData({ ...addEmployeesData, company: companydata });
     }
     else if (event.target.name === 'department') {
@@ -145,20 +144,25 @@ const AddEmployee = () => {
     else if (event.target.name !== 'designation' || event.target.name !== 'company' || event.target.name !== 'department') {
       setEmployeesData({ ...addEmployeesData, [event.target.name]: event.target.value });
     }
-    console.log('addEmployeesData...', addEmployeesData);
 
   }
   const addEmployee = async () => {
-    const repsonse = await axios.post(`https://organization-demo.herokuapp.com/employee/createEmployee`, addEmployeesData, {
-      headers: {
-        token: localStorage.getItem('authToken')
+    try {
+      const repsonse = await axios.post(`https://organization-demo.herokuapp.com/employee/createEmployee`, addEmployeesData, {
+        headers: {
+          token: localStorage.getItem('authToken')
+        }
+      });
+      if (repsonse && (repsonse.status === 201 || repsonse.status === 200)) {
+        setEmployeeAddResponse(true)
       }
-    });
-    console.log('add employee response..', repsonse);
-    console.log('response status..', repsonse.status)
-    if (repsonse && (repsonse.status === 201 || repsonse.status === 200)) {
-      setEmployeeAddResponse(true)
+      else {
+        setEmployeeAddResponse('error');
+      }
+    } catch (error) {
+      setEmployeeAddResponse('error');
     }
+
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -166,6 +170,10 @@ const AddEmployee = () => {
       {employeeAddResponse && (<Alert severity="success">
         <AlertTitle>Success</AlertTitle>
         Employee created successfully!
+      </Alert>)}
+      {employeeAddResponse === 'error' && (<Alert severity="error">
+        <AlertTitle>Error</AlertTitle>
+        Employee creation failed!
       </Alert>)}
       <Paper className={classes.wrapper}>
         <div className={classes.paper}>
@@ -244,7 +252,7 @@ const AddEmployee = () => {
               </Grid>
               <Grid item xs={12} sm={12}>
                 <FormControl required className={classes.formControl}>
-                <InputLabel id="demo-simple-select-helper-label">Designation</InputLabel>
+                  <InputLabel id="demo-simple-select-helper-label">Designation</InputLabel>
                   <Select
                     labelId="standard-select-designation"
                     id="standard-select-designation"
@@ -261,7 +269,7 @@ const AddEmployee = () => {
               </Grid>
               <Grid item xs={12} sm={12}>
                 <FormControl required className={classes.formControl}>
-                <InputLabel id="demo-simple-select-helper-label">Department</InputLabel>
+                  <InputLabel id="demo-simple-select-helper-label">Department</InputLabel>
                   <Select
                     labelId="standard-select-department"
                     id="standard-select-department"
@@ -278,7 +286,7 @@ const AddEmployee = () => {
               </Grid>
               <Grid item xs={12} sm={12}>
                 <FormControl required className={classes.formControl}>
-                <InputLabel id="demo-simple-select-helper-label">Company</InputLabel>
+                  <InputLabel id="demo-simple-select-helper-label">Company</InputLabel>
                   <Select
                     labelId="standard-select-company"
                     id="standard-select-company"

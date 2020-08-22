@@ -40,6 +40,7 @@ const AddCompany = () => {
   const [orgs, setOrgs] = useState([])
   const [addCompanyData, setCompanyData] = useState({});
   const [companyAddResponse, setCompanyAddResponse] = useState(false);
+  const [companyErrorResponse, setCompanyErrorResponse] = useState({});
 
   useEffect(() => {
     const getAllOrgs = async () => {
@@ -50,20 +51,17 @@ const AddCompany = () => {
     getAllOrgs();
   }, [])
   const handleChange = (event) => {
-    console.log(event.target.name)
     if (event.target.name === 'organizationId') {
       const orgAdd = orgs.filter((organization) => {
-        console.log('inside filter...', organization)
-        if(organization.organizationId === event.target.value) {
+        if (organization.organizationId === event.target.value) {
           return organization
         }
       });
-      console.log('orgData...', orgAdd);
       const orgData = {
         orgId: orgAdd[0].organizationId,
         orgName: orgAdd[0].orgName
       }
-      
+
       setCompanyData({ ...addCompanyData, organization: orgData });
     }
     else {
@@ -72,25 +70,40 @@ const AddCompany = () => {
   }
 
   const handleSubmit = async (event) => {
-    console.log(addCompanyData)
     addCompanyData.companyId = event.target.companyId.value;
     event.preventDefault();
-    console.log('addCompanyData...', addCompanyData);
-    const repsonse = await axios.post(`https://organization-demo.herokuapp.com/company/createCompany`, addCompanyData, {
-      headers: {
-        token: localStorage.getItem('authToken')
+    try {
+      const repsonse = await axios.post(`https://organization-demo.herokuapp.com/company/createCompany`, addCompanyData, {
+        headers: {
+          token: localStorage.getItem('authToken')
+        }
+      });
+      if (repsonse && (repsonse.status === 201 || repsonse.status === 200)) {
+        setCompanyAddResponse(true)
       }
-    });
-    if (repsonse && (repsonse.status === 201 || repsonse.status === 200)) {
-      setCompanyAddResponse(true)
+      else {
+        setCompanyErrorResponse({ message: repsonse.message })
+      }
+    } catch (error) {      
+      if(!error.status) {
+        setCompanyErrorResponse({ message: 'Please provide valid data' })
+      }
+      else {
+        setCompanyErrorResponse({message: error.status});
+      }
     }
+
   }
 
   return (
     <Paper className={classes.root}>
-      {companyAddResponse && (<Alert severity="success">
+      {(companyAddResponse && !companyErrorResponse.message) && (<Alert severity="success">
         <AlertTitle>Success</AlertTitle>
         Company created successfully!
+      </Alert>)}
+      {(companyErrorResponse.message && !companyAddResponse) && (<Alert severity="error">
+        <AlertTitle>Error</AlertTitle>
+        {companyErrorResponse.message}
       </Alert>)}
       <Grid container spacing={3}>
         <Grid item xs={6}>
