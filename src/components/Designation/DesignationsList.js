@@ -101,6 +101,9 @@ export default function DesignationsList() {
         title='Designation List'
         columns={state.columns}
         data={Array.from(state.data)}
+        options={{
+          search: false
+        }}
         editable={{
           onRowAdd: addDesignation,
           onRowDelete: deleteDesignation

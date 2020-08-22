@@ -90,6 +90,9 @@ const DepartmentsList = () => {
         title='Department List'
         columns={state.columns}
         data={Array.from(state.data)}
+        options={{
+          search: false
+        }}
         editable={{
           onRowAdd: addDepartment,
           onRowDelete: deleteDepartment
