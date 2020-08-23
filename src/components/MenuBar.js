@@ -118,7 +118,7 @@ export default function MenuBar(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {/* <MenuItem onClick={handleMenuClose}>My account</MenuItem> */}
       <MenuItem onClick={handleLogut}>Logout</MenuItem>
     </Menu>
   );
@@ -143,7 +143,6 @@ export default function MenuBar(props) {
         >
           <Avatar alt="Remy Sharp" src="/broken-image.jpg" />
         </IconButton>
-        <p>My account</p>
         <p>Logout</p>
       </MenuItem>
     </Menu>
