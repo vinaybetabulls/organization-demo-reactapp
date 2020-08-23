@@ -62,6 +62,7 @@ const Dashboard = ({ className, ...rest }) => {
       const now = Date.now().valueOf() / 1000
       if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
         setIsLoggedIn(false)
+        localStorage.removeItem('authToken')
       }
       else {
         setIsLoggedIn(true)

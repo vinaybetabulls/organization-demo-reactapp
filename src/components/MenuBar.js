@@ -156,6 +156,7 @@ export default function MenuBar(props) {
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="open drawer" > <MenuIcon /> </IconButton>
           <NavLink className={classes.link} to="/dashboard" variant="button" noWrap> Organisations </NavLink>
           <div className={classes.grow} />
+          {!isLoggedIn && <NavLink variant="button" color="inherit" to="/" className={classes.link} activeStyle={{fontWeight: "bold",}}> Login </NavLink>}
           {isLoggedIn && (
             <>
               <nav>
