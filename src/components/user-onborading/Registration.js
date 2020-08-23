@@ -43,11 +43,14 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
   const classes = useStyles();
 
-  const {response: registration, error, isLoading, handleChange, handleSubmit} = useFetch({
+  let {response: registration, error, isLoading, handleChange, handleSubmit} = useFetch({
     url: `user/registration`,
     method: `POST`
   })
 
+  if(registration.length == 0 || !registration) {
+    registration = false;
+  }
   return (
     <Container component="main" maxWidth="xs">
       {registration && (<Alert severity="success">
